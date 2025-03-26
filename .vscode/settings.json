@@ -1,0 +1,7 @@
+{
+    "codium.codeCompletion.enable": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "always"
+    },
+    "java.configuration.updateBuildConfiguration": "interactive"
+}
