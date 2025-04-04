@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:sample/models/response/drink.dart';
+import 'package:sample/screens/home/controller.dart';
 import 'package:sample/utils.dart';
 
 class DrinkCard extends StatelessWidget {
   final UiDrink drink;
   final String url;
-  const DrinkCard({super.key, required this.drink, this.url = 'image-7.png'});
+  final HomeController controller;
+  const DrinkCard({
+    super.key,
+    required this.drink,
+    required this.controller,
+    this.url = 'image-7.png',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,21 +25,29 @@ class DrinkCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (drink.favorite)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                   drink.name,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              CircleAvatar(
-                radius: 12,
-                backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.favorite,
-                  color: Colors.red,
-                  size: 15,
+              InkWell(
+                onTap: drink.favorite
+                    ? null
+                    : () async {
+                        await controller.addToFavorite(drink.id);
+                      },
+                child: CircleAvatar(
+                  radius: 12,
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.favorite,
+                    color: drink.favorite ? Colors.red : Colors.grey,
+                    size: 15,
+                  ),
                 ),
               ),
             ],
@@ -52,8 +67,8 @@ class DrinkCard extends StatelessWidget {
           ),
           Spacer(),
           Center(
-            child: Image.asset(
-              'assets/$url',
+            child: Image.network(
+              drink.url,
               height: 100,
             ),
           ),

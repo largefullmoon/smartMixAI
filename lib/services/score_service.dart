@@ -17,9 +17,8 @@ class ScoreService extends ApiClient {
     };
 
     return await postRequest<Map<String, dynamic>>(
-      'savescore',
+      'score',
       serializableData
     );
   }
-
 }

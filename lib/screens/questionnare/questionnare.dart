@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sample/common/widgets/appbar.dart';
@@ -8,7 +10,8 @@ import 'package:sample/utils.dart';
 import 'package:sample/utils/overlay.dart';
 
 class TastePreferenceScreen extends StatefulWidget {
-  const TastePreferenceScreen({super.key});
+  final String from;
+  const TastePreferenceScreen({super.key, required this.from});
 
   @override
   _TastePreferenceScreenState createState() => _TastePreferenceScreenState();
@@ -40,11 +43,25 @@ class _TastePreferenceScreenState extends State<TastePreferenceScreen> {
   final QuestionnaireController _controller =
       Get.find<QuestionnaireController>();
 
-  void _saveScore() async {
-    showOverlay(asyncFunction: () async {
-      await Future.delayed(Duration(seconds: 4));
+  Future<void> _saveScore() async {
+    await showOverlay(asyncFunction: () async {
       await _controller.saveScore(selectedValues);
       // Get.toNamed('/dashboard');
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _controller.getScore().then((value) {
+      if (value != null) {
+        Map<int, int> scores = (jsonDecode(value) as Map<String, dynamic>)
+            .map((key, value) => MapEntry(int.parse(key), value as int));
+        setState(() {
+          selectedValues = scores;
+        });
+      }
     });
   }
 
@@ -109,10 +126,19 @@ class _TastePreferenceScreenState extends State<TastePreferenceScreen> {
                   ),
 
                   SizedBox(height: 20),
-
-                  // Menu Bar Button
+                  (widget.from == 'settings')
+                      ? _buildButton("SAVE", Colors.black, Colors.white,
+                          fullWidth: true, onPressed: () async {
+                          await _saveScore();
+                          Get.back();
+                        })
+                      :
                   _buildButton("MENU BAR", Colors.black, Colors.white,
-                      fullWidth: true, onPressed: _saveScore),
+                          fullWidth: true, onPressed: () async {
+                          _saveScore().whenComplete(() {
+                            Get.offAllNamed('/dashboard');
+                          });
+                        }),
                 ],
               ),
             ),

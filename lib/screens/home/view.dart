@@ -293,7 +293,8 @@ class HomePage extends GetView<HomeController> {
                     });
                   },
                   child: DrinkCard(
-                   drink: drink
+                    drink: drink,
+                    controller: controller,
                   ),
                 );
               },

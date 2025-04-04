@@ -5,12 +5,14 @@ import 'package:get/get.dart';
 import 'package:sample/common/config/routes.dart';
 import 'package:sample/common/service/shared_prefs.dart';
 import 'package:sample/screens/auth/chat.dart';
+import 'package:sample/screens/favorite/controller.dart';
 import 'package:sample/screens/favorite/view.dart';
 import 'package:sample/screens/ingredients/view.dart';
 import 'package:sample/screens/auths/login.dart';
 import 'package:sample/screens/detail/view.dart';
 import 'package:sample/screens/auths/onboard.dart';
 import 'package:sample/screens/home/controller.dart';
+import 'package:sample/screens/questionnare/controller.dart';
 import 'package:sample/screens/questionnare/questionnare.dart';
 import 'package:sample/screens/auths/register.dart';
 import 'package:sample/screens/auth/suggestion.dart';
@@ -25,8 +27,10 @@ void main() async {
   await Get.putAsync(() => SharedPrefsService().init(), permanent: true);
   Get.put(SharedPrefsService(), permanent: true);
   Get.put(BaseController(), permanent: true);
+  Get.put(FavoriteController());
   Get.put(HomeController());
-  Get.put(ApiService());
+  Get.put(QuestionnaireController(), permanent: true);
+  Get.put(ApiService(), permanent: true);
   runApp(MyApp());
 }
 
@@ -56,7 +60,9 @@ class _MyWidgetState extends State<MyWidget> {
     LoginScreen(),
     RegisterScreen(),
     OnBoardScreen(),
-    TastePreferenceScreen(),
+    TastePreferenceScreen(
+      from: 'home',
+    ),
     HomePage(),
     UserProfileScreen(),
     FavoritesScreen(),

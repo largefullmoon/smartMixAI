@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sample/common/service/shared_prefs.dart';
@@ -58,6 +60,8 @@ class AuthController extends GetxController {
         // Save user profile image to shared preferences
         await _sharedPrefsService.setString(
             'profile_image', response['profile_image']);
+        await _sharedPrefsService.setString(
+            'scores', jsonEncode(response['scores']));
         Get.to(OnBoardScreen());
       } else {
         Get.snackbar('Signin Failed', 'Invalid Credentials',

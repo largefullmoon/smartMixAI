@@ -11,20 +11,22 @@ class FavoriteController extends BaseController {
   @override
   void onInit() {
     super.onInit();
-    _fetchFavorites();
+    fetchFavorites();
   }
 
-  Future<void> _fetchFavorites() async {
+  Future<void> fetchFavorites() async {
     // send sample data
-    _favorites.value = [
-      FavoriteResponse(name: 'VODKA', url: 'vodka'),
-      FavoriteResponse(name: 'COGNAC', url: 'cognac'),
-    ].map((e) => e.toUIType()).toList();
-    update(['listsss']);
-    return;
+    // _favorites.value = [
+    //   FavoriteResponse(name: 'VODKA', url: 'vodka'),
+    //   FavoriteResponse(name: 'COGNAC', url: 'cognac'),
+    // ].map((e) => e.toUIType()).toList();
+    // update(['listsss']);
+    // return;
     try {
       final response = await Get.find<ApiService>().getFavorites();
-      _favorites.value = response.map((e) => e.toUIType()).toList();
+      if (response != null) {
+        _favorites.value = response.map((e) => e.toUIType()).toList();
+      }
     } catch (e) {
       print(e.toString());
       Get.error('Favorites', 'Error fetching Favorites');

@@ -1,34 +1,40 @@
 import 'dart:math';
 
+import 'package:sample/models/response/category.dart';
+
 class DrinkResponse {
   final String id;
   final String name;
   final String category; // Reference ID
   final Map<String, dynamic> details;
   final List<String> ingredients;
+  final bool isFavorite;
 
   DrinkResponse(
       {required this.id,
       required this.name,
       required this.category,
       required this.details,
-      required this.ingredients});
+      required this.ingredients,
+      required this.isFavorite});
 
   // Factory constructor to create an instance from a JSON map
   factory DrinkResponse.fromJson(Map<String, dynamic> json) {
     return DrinkResponse(
-      id: json['_id'] ?? '', // MongoDB ID
+      id: json['id'] ?? '', // MongoDB ID
       name: json['name'] ?? '',
       category: json['category'] ?? '',
       details: Map<String, dynamic>.from(json['details'] ?? {}),
       ingredients: List<String>.from(json['ingredients'] ?? []),
+      isFavorite: json['isFavorite'] ?? false,
+
     );
   }
 
   // Convert the instance back to JSON
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
+      'id': id,
       'name': name,
       'category': category,
       'details': details,
@@ -38,17 +44,17 @@ class DrinkResponse {
 
   UiDrink toUIType() {
     return UiDrink(
-        id: Random().nextInt(100),
+        id: id,
         name: name,
-        url: details['image'],
+        url: details['image'] ?? "",
         description: details['description'],
-        favorite: true,
+        favorite: isFavorite,
         isLiked: false);
   }
 }
 
 class UiDrink {
-  int id;
+  String id;
   String name;
   String url;
   String description;

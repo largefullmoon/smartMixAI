@@ -1,20 +1,45 @@
-import 'dart:math';
 
 class FavoriteResponse {
+  String id;
   String name;
   String url;
+  bool liked;
+  bool favorite;
 
-  FavoriteResponse({required this.name, required this.url});
+  factory FavoriteResponse.fromJson(Map<String, dynamic> json) {
+    return FavoriteResponse(
+      id: json['id'] ?? "",
+      name: json['name'] ?? "",
+      url: json['url'] ?? "",
+      liked: json['liked'] ?? false,
+      favorite: json['favorite'] ?? false,
+    );
+  }
+
+  FavoriteResponse(
+      {required this.id,
+      required this.name,
+      required this.url,
+      required this.liked,
+      required this.favorite});
 
   UiFavorite toUIType() {
-    return UiFavorite(id: Random().nextInt(100), name: name, url: url);
+    return UiFavorite(
+        id: id, name: name, url: url, favorite: favorite, liked: liked);
   }
 }
 
 class UiFavorite {
-  int id;
+  String id;
   String name;
   String url;
+  bool liked;
+  bool favorite;
 
-  UiFavorite({required this.id, required this.name, required this.url});
+  UiFavorite(
+      {required this.id,
+      required this.name,
+      required this.url,
+      required this.favorite,
+      required this.liked});
 }

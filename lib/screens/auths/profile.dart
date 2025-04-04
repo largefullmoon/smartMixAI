@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sample/screens/favorite/controller.dart';
+import 'package:sample/screens/questionnare/questionnare.dart';
 import 'package:sample/services/base.controller.dart';
 import 'package:sample/styles.dart';
 import 'package:sample/utils.dart';
@@ -96,6 +97,10 @@ class ProfileScreen extends GetView<BaseController> {
                 _getDrawerItem(
                     'Preference', Icons.settings,
                     () => Get.toNamed('/preference')),
+                // Divider(),
+                _getDrawerItem(
+                    'Taste', Icons.settings,
+                    () => Get.to(TastePreferenceScreen(from: 'settings'))),
                 // Divider(),
                 _getDrawerItem(
                     'Logout', Icons.logout, () async {

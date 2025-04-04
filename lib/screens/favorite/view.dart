@@ -5,71 +5,95 @@ import 'package:sample/screens/favorite/controller.dart';
 import 'package:sample/styles.dart';
 import 'package:sample/utils.dart';
 
-class FavoritesScreen extends GetView<FavoriteController> {
+
+
+
+
+class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
+
+  @override
+  State<FavoritesScreen> createState() => _FavoritesScreenState();
+}
+
+class _FavoritesScreenState extends State<FavoritesScreen> {
+  final FavoriteController controller = Get.find<FavoriteController>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.fetchFavorites();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Background Image
-          Image.asset(
-            'assets/bg.png', // Replace with your image asset
-            fit: BoxFit.cover,
-          ),
-          Container(
-            color: Colors.black
-                .withValues(alpha: .3), // Dark overlay for better contrast
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 50,
-                ),
-                getAppBar("", canGoBack: false),
-                SizedBox(
-                  height: 40,
-                ),
-                _getTopContainer(),
-                SizedBox(
-                  height: 40,
-                ),
-
-                // ListView.builder(
-                //   shrinkWrap: true,
-                //   itemCount: controller.favorites.length,
-                //   itemBuilder: (context, index) {
-                //     var favorite = controller.favorites[index];
-                //     return _getIndividualCard(favorite.url, favorite.name);
-                //   },
-                // ),
-                // GetBuilder<FavoriteController>(
-                //   id: "listsss",
-                //   builder: (controller) {
-                //     return ListView.builder(
-                //       key: Key("lists"),
-                //       shrinkWrap: true,
-                //       itemCount: controller.favorites.length,
-                //       itemBuilder: (context, index) {
-                //         var favorite = controller.favorites[index];
-                //         return _getIndividualCard(favorite.url, favorite.name);
-                //       },
-                //     );
-                //   },
-                // )
-                _getIndividualCard("vodka", "VODKA"),
-                _getIndividualCard("cognac", "COGNAC"),
-                _getIndividualCard("gin", "GIN"),
-                _getIndividualCard("mezcel", "MEZCEL"),
-              ],
+      body: RefreshIndicator(
+        onRefresh: () => controller.fetchFavorites(),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Background Image
+            Image.asset(
+              'assets/bg.png', // Replace with your image asset
+              fit: BoxFit.cover,
             ),
-          ),
-        ],
+            Container(
+              color: Colors.black
+                  .withValues(alpha: .3), // Dark overlay for better contrast
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 50,
+                  ),
+                  getAppBar("", canGoBack: false),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  _getTopContainer(),
+                  SizedBox(
+                    height: 40,
+                  ),
+
+                  Expanded(
+                      child: Obx(
+                    () => ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: controller.favorites.length,
+                      itemBuilder: (context, index) {
+                        var favorite = controller.favorites[index];
+                        return _getIndividualCard(favorite.url, favorite.name);
+                      },
+                    ),
+                  )),
+                  // GetBuilder<FavoriteController>(
+                  //   id: "listsss",
+                  //   builder: (controller) {
+                  //     return ListView.builder(
+                  //       key: Key("lists"),
+                  //       shrinkWrap: true,
+                  //       itemCount: controller.favorites.length,
+                  //       itemBuilder: (context, index) {
+                  //         var favorite = controller.favorites[index];
+                  //         return _getIndividualCard(favorite.url, favorite.name);
+                  //       },
+                  //     );
+                  //   },
+                  // )
+                  // _getIndividualCard("vodka", "VODKA"),
+                  // _getIndividualCard("cognac", "COGNAC"),
+                  // _getIndividualCard("gin", "GIN"),
+                  // _getIndividualCard("mezcel", "MEZCEL"),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -16,7 +16,10 @@ class BaseController extends GetxController {
   getUserProfile() {
     var image =
         _sharedPrefs.getString('profile_image') ?? 'https://placehold.co/400';
-    return image;
+    if (image.contains(ApiClient.baseUrl)) {
+      return image;
+    }
+    return "${ApiClient.baseUrl}/$image";
   }
 
   getUserName() {

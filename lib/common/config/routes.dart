@@ -23,7 +23,11 @@ import 'package:get/get.dart';
 
 final routes = [
   GetPage(name: '/splash', page: () => SplashScreen()),
-  GetPage(name: '/dashboard', page: () => Dashboard()),
+  GetPage(name: '/dashboard', page: () => Dashboard(), bindings: [
+    BindingsBuilder(() {
+    
+    })
+  ]),
   GetPage(name: '/login', page: () => LoginScreen(), bindings: [
     BindingsBuilder(() {
       Get.lazyPut<AuthController>(() => AuthController());
@@ -37,15 +41,20 @@ final routes = [
   GetPage(name: '/onboard', page: () => OnBoardScreen()),
   GetPage(
       name: '/taste_preference',
-      page: () => TastePreferenceScreen(),
+      page: () => TastePreferenceScreen(
+            from: 'questionnare',
+          ),
       bindings: [
-        BindingsBuilder(() {
-          Get.lazyPut<QuestionnaireController>(() => QuestionnaireController());
-        })
+        // BindingsBuilder(() {
+        //   Get.lazyPut<QuestionnaireController>(() => QuestionnaireController());
+        // })
       ]),
   GetPage(name: '/home', page: () => HomePage(), bindings: [
     BindingsBuilder(() {
-      Get.put<HomeController>(HomeController());
+      Get.put<HomeController>(
+        HomeController(),
+        permanent: true,
+      );
     })
   ]),
   GetPage(name: '/preference', page: () => UserProfileScreen()),
@@ -57,7 +66,7 @@ final routes = [
   ]),
   GetPage(name: '/favorites', page: () => FavoritesScreen(), bindings: [
     BindingsBuilder(() {
-      Get.put<FavoriteController>(FavoriteController());
+      // Get.put<FavoriteController>(FavoriteController());
     })
   ]),
   GetPage(name: '/ingredients', page: () => IngredientsScreen()),
