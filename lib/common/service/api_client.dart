@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiClient {
-  static String baseUrl = 'http://192.168.52.82:3000';
+  static String baseUrl = 'http://10.0.2.2:3000';
+  static String adminUrl = 'http://10.0.2.2:5000'; // adminPanelBackendUrl For Images
 
   static Future<Map<String, String>> getHeaders() async {
     final prefs = await SharedPreferences.getInstance();
