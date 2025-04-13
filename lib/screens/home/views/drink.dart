@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sample/common/service/api_client.dart';
 import 'package:sample/models/response/drink.dart';
 import 'package:sample/screens/home/controller.dart';
 import 'package:sample/utils.dart';
@@ -16,6 +17,7 @@ class DrinkCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = '${ApiClient.adminUrl}${drink.url}';
     return Container(
       decoration: BoxDecoration(
         color: hexToColor("#EBCCB9"),
@@ -68,7 +70,7 @@ class DrinkCard extends StatelessWidget {
           Spacer(),
           Center(
             child: Image.network(
-              drink.url,
+              imageUrl,
               height: 100,
             ),
           ),

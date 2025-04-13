@@ -24,47 +24,32 @@ class _ChatScreenState extends State<ChatScreen> {
     if (message.trim().isEmpty) return;
 
     setState(() {
-      _messages.add(ChatMessage(
-        text: message,
-        isUser: true,
-      ));
+      _messages.add(ChatMessage(text: message, isUser: true));
       _isLoading = true;
     });
 
     try {
       final response = await http.post(
         Uri.parse('https://anti.digicopy.me/chat/ai_response'),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: {
-          'query': message,
-          'target_socket_id': 'your_socket_id_here'
-        },
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: {'query': message, 'target_socket_id': 'your_socket_id_here'},
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
           _messages.add(ChatMessage(
-            text: data['message'] ?? 'No response received',
-            isUser: false,
-          ));
+              text: data['message'] ?? 'No response received', isUser: false));
         });
       } else {
         setState(() {
           _messages.add(ChatMessage(
-            text: 'Error: Failed to get response',
-            isUser: false,
-          ));
+              text: 'Error: Failed to get response', isUser: false));
         });
       }
     } catch (e) {
       setState(() {
-        _messages.add(ChatMessage(
-          text: 'Error: $e',
-          isUser: false,
-        ));
+        _messages.add(ChatMessage(text: 'Error: $e', isUser: false));
       });
     } finally {
       setState(() {
@@ -78,8 +63,13 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: Text('Chat with Sundane'),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        title: Text('Chat with Sundane',
+            style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: Stack(
         children: [
@@ -89,24 +79,23 @@ class _ChatScreenState extends State<ChatScreen> {
               fit: BoxFit.cover,
             ),
           ),
-          Container(
-            color: Colors.black.withOpacity(0.3),
-          ),
+          Container(color: Colors.black.withOpacity(0.3)),
           Column(
             children: [
               Expanded(
                 child: ListView.builder(
+                  reverse: true,
                   itemCount: _messages.length,
-                  padding: EdgeInsets.symmetric(vertical: 8),
+                  padding: EdgeInsets.all(12),
                   itemBuilder: (context, index) {
-                    return _buildMessageBubble(_messages[index]);
+                    return _buildMessageBubble(_messages[_messages.length - 1 - index]);
                   },
                 ),
               ),
               if (_isLoading)
                 Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(),
+                  padding: EdgeInsets.all(12),
+                  child: CircularProgressIndicator(color: Colors.white),
                 ),
               _buildMessageInput(),
             ],
@@ -116,124 +105,13 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _getTopContainer() {
-    return Container(
-      padding: EdgeInsets.all(8),
-      width: double.infinity,
-      decoration: BoxDecoration(
-          color: hexToColor("#EBCCB9"),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: hexToColor("#C58346"))),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "TALKING TO SUNDANE".toUpperCase(),
-            style: CustomTextStyle.text_600(fontSize: 16),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _getIndividualCard(String imageName, String name) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 4),
-      decoration: BoxDecoration(
-          color: hexToColor("#EBCCB9"),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.white)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 4,
-                child: Image.asset(
-                  'assets/$imageName.png',
-                  height: 80,
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
-              Expanded(
-                flex: 4,
-                child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(
-                      name,
-                      style: CustomTextStyle.text_600(fontSize: 18),
-                    )),
-              ),
-              Expanded(
-                flex: 3,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 4.0, vertical: 2),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 15,
-                        child: Icon(
-                          Icons.favorite,
-                          color: hexToColor("#D6253F"),
-                          size: 15,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 4.0, vertical: 2),
-                      child: CircleAvatar(
-                        backgroundColor: hexToColor("#C58346"),
-                        radius: 15,
-                        child: Icon(
-                          Icons.thumb_down_sharp,
-                          color: Colors.white,
-                          size: 15,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildButton(String label, Color bgColor, Color textColor,
-      {bool fullWidth = false}) {
-    return SizedBox(
-      width: fullWidth ? double.infinity : 150,
-      height: 50,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: bgColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
-        onPressed: () {
-        },
-        child: Text(
-          label,
-          style: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.bold, color: textColor),
-        ),
-      ),
-    );
-  }
-
   Widget _buildMessageInput() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-      color: Colors.white,
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
+      ),
       child: SafeArea(
         child: Row(
           children: [
@@ -241,19 +119,21 @@ class _ChatScreenState extends State<ChatScreen> {
               child: TextField(
                 controller: _messageController,
                 decoration: InputDecoration(
-                  hintText: 'Type a message...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  fillColor: Colors.white,
+                  hintText: 'Type something...',
                   filled: true,
+                  fillColor: Colors.grey[100],
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
-                textInputAction: TextInputAction.send,
                 onSubmitted: (text) => _sendMessage(text),
               ),
             ),
-            SizedBox(width: 8),
+            SizedBox(width: 10),
             CircleAvatar(
+              radius: 24,
               backgroundColor: Colors.black,
               child: IconButton(
                 icon: Icon(Icons.send, color: Colors.white),
@@ -267,20 +147,35 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildMessageBubble(ChatMessage message) {
+    final alignment = message.isUser ? Alignment.centerRight : Alignment.centerLeft;
+    final color = message.isUser ? Colors.black : Colors.white;
+    final textColor = message.isUser ? Colors.white : Colors.black;
+
     return Align(
-      alignment: message.isUser ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: alignment,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        padding: EdgeInsets.all(12),
+        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+        margin: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         decoration: BoxDecoration(
-          color: message.isUser ? Colors.black : Colors.grey[300],
-          borderRadius: BorderRadius.circular(15),
+          color: color,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+            bottomLeft: Radius.circular(message.isUser ? 16 : 0),
+            bottomRight: Radius.circular(message.isUser ? 0 : 16),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 3,
+              offset: Offset(0, 2),
+            )
+          ],
         ),
         child: Text(
           message.text,
-          style: TextStyle(
-            color: message.isUser ? Colors.white : Colors.black,
-          ),
+          style: TextStyle(color: textColor, fontSize: 15),
         ),
       ),
     );
@@ -319,20 +214,23 @@ class _ReadMoreTextState extends State<ReadMoreText> {
       children: [
         Text(
           displayText,
-          style: TextStyle(fontSize: 9),
+          style: TextStyle(fontSize: 12, color: Colors.black87),
           maxLines: isExpanded ? null : 2,
           overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
         ),
-        if (shouldTruncate) // Show 'Read more' only if truncation is needed
+        if (shouldTruncate)
           InkWell(
             onTap: () {
               setState(() {
                 isExpanded = !isExpanded;
               });
             },
-            child: Text(
-              isExpanded ? 'Read less' : 'Read more',
-              style: const TextStyle(color: Colors.blue, fontSize: 9),
+            child: Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Text(
+                isExpanded ? 'Read less' : 'Read more',
+                style: TextStyle(color: Colors.blueAccent, fontSize: 12),
+              ),
             ),
           ),
       ],
@@ -351,22 +249,16 @@ class MicButtonWithGlow extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.brown[700],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.orange.withOpacity(0.5),
+            blurRadius: 30,
+            spreadRadius: 5,
+            offset: Offset(0, 0),
+          ),
+        ],
       ),
-      child: ShaderMask(
-        shaderCallback: (bounds) {
-          return RadialGradient(
-            colors: [
-              Colors.orange.withOpacity(0.7),
-              Colors.transparent,
-            ],
-            center: Alignment.center,
-            radius: 1.2,  
-            stops: [0.6, 1.0], 
-          ).createShader(bounds);
-        },
-        blendMode: BlendMode.srcOver,
-        child: const Icon(Icons.mic, color: Colors.white, size: 40),
-      ),
+      child: Icon(Icons.mic, color: Colors.white, size: 40),
     );
   }
 }

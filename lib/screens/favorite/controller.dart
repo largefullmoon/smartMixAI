@@ -29,7 +29,10 @@ class FavoriteController extends BaseController {
       }
     } catch (e) {
       print(e.toString());
-      Get.error('Favorites', 'Error fetching Favorites');
+      // Get.error('Favorites', 'Error fetching Favorites');
+      Future.delayed(Duration.zero, () {
+        Get.error('Favorites', 'Error fetching Favorites');
+      });
     }
   }
 }

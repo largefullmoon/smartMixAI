@@ -289,7 +289,7 @@ class HomePage extends GetView<HomeController> {
                   onTap: () {
                     Get.toNamed('/detail', arguments: {
                       'id': drink.id.toString(),
-                      'name': drink.name
+                      'name': drink.name,
                     });
                   },
                   child: DrinkCard(

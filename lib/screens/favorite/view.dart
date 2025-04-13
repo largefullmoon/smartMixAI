@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sample/common/service/api_client.dart';
 import 'package:sample/common/widgets/appbar.dart';
 import 'package:sample/screens/favorite/controller.dart';
 import 'package:sample/styles.dart';
 import 'package:sample/utils.dart';
-
-
-
 
 
 class FavoritesScreen extends StatefulWidget {
@@ -136,8 +134,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             children: [
               Expanded(
                 flex: 4,
-                child: Image.asset(
-                  'assets/$imageName.png',
+                child: Image.network(
+                '${ApiClient.adminUrl}$imageName',
                   height: 80,
                   fit: BoxFit.fitHeight,
                 ),

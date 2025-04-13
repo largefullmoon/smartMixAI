@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sample/utils.dart';
+import 'package:sample/common/service/api_client.dart';
 
 class DrinkCategory extends StatelessWidget {
   final String title;
@@ -13,6 +14,7 @@ class DrinkCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = '${ApiClient.adminUrl}${emoji}';
     return Container(
       width: 100,
       height: 100,
@@ -30,9 +32,14 @@ class DrinkCategory extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Image.asset(
-            'assets/$emoji.png', // Placeholder for drink category image
+          Image.network(
+            imageUrl,
             height: 50,
+            errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return CircularProgressIndicator();
+            },
           ),
           SizedBox(height: 8),
           Text(

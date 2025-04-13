@@ -25,7 +25,7 @@ import 'package:sample/services/base.controller.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Get.putAsync(() => SharedPrefsService().init(), permanent: true);
-  Get.put(SharedPrefsService(), permanent: true);
+  // Get.put(SharedPrefsService(), permanent: true);
   Get.put(BaseController(), permanent: true);
   Get.put(FavoriteController());
   Get.put(HomeController());

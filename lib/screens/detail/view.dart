@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sample/common/service/api_client.dart';
 import 'package:sample/common/widgets/appbar.dart';
 import 'package:sample/screens/detail/controller.dart';
 import 'package:sample/styles.dart';
@@ -61,7 +62,9 @@ class DrinkDetailScreen extends GetView<DrinkDetailController> {
                                 // Image.network(controller.detail?.url ?? ""),
                                 Center(
                                   child: Image.network(
-                                    controller.detail?.url ?? "",
+                                    controller.detail?.url != null
+                                        ? ApiClient.adminUrl + controller.detail!.url
+                                        : '',
                                     fit: BoxFit.fill,
                                   ),
                                 ),

@@ -10,15 +10,16 @@ import 'package:sample/utils/overlay.dart';
 
 class HomeController extends BaseController {
   final _categories = <UiCategory>[].obs;
+
   List<UiCategory> get categories => _categories;
 
   final _drinks = <UiDrink>[].obs;
+
   List<UiDrink> get drinks => _drinks;
 
   final apiService = ApiService();
 
   final FavoriteController favoriteController = Get.find<FavoriteController>();
-
 
   @override
   void onInit() {
@@ -26,7 +27,6 @@ class HomeController extends BaseController {
     fetchCategories();
     fetchDrinks();
   }
-
 
   Future<void> fetchCategories() async {
     // send sample data
@@ -38,9 +38,9 @@ class HomeController extends BaseController {
     // return;
     try {
       final response = await apiService.getCategories();
+      print("response: ");
       print(response);
-      if (response != null)
-      _categories.value = response.map((e) => e.toUIType()).toList();
+      if (response != null) _categories.value = response.map((e) => e.toUIType()).toList();
     } catch (e) {
       print("fetchCategories $e");
       Get.error('Categories', 'Error fetching categories');
@@ -83,6 +83,8 @@ class HomeController extends BaseController {
     try {
       _drinks.clear();
       final response = await apiService.getDrinks();
+      print("response: ");
+      print(response);
       if (response != null) {
         _drinks.value = response.map((e) => e.toUIType()).toList();
         _drinks.refresh();
@@ -103,5 +105,4 @@ class HomeController extends BaseController {
       print(e);
     }
   }
-
 }
